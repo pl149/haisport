@@ -1,0 +1,38 @@
+@import "tailwindcss";
+
+:root {
+  --primary-bg: #F5F5F5;
+  --surface-color: #FFFFFF;
+  --accent-color: #0F52BA;
+  --text-main: #333333;
+  --text-muted: #666666;
+  --border-color: #DDDDDD;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  background-color: var(--primary-bg);
+  color: var(--text-main);
+  overflow-x: hidden;
+}
+
+button {
+  cursor: pointer;
+  border: none;
+  outline: none;
+  font-family: inherit;
+}
+
+/* Glassmorphism Utilities */
+.glass {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(0, 0, 0, 0.05);
+}
