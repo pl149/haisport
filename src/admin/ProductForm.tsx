@@ -69,7 +69,7 @@ export default function ProductForm({ initialData, onClose, onSuccess }: Product
     const target = e.target as HTMLInputElement;
     const { name, value, type, checked } = target;
     if (name === 'main_category') {
-      setFormData(prev => ({
+      setFormData((prev: any) => ({
         ...prev,
         main_category: value,
         sub_category: SUB_CATEGORIES[value]?.[0] || ''
@@ -82,12 +82,12 @@ export default function ProductForm({ initialData, onClose, onSuccess }: Product
         [name]: formattedValue
       }));
     } else if (type === 'checkbox') {
-      setFormData(prev => ({
+      setFormData((prev: any) => ({
         ...prev,
         [name]: checked
       }));
     } else {
-      setFormData(prev => ({
+      setFormData((prev: any) => ({
         ...prev,
         [name]: value
       }));

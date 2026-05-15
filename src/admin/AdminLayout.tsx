@@ -1,7 +1,7 @@
-import { ReactNode, useState } from 'react';
+import { useState } from 'react';
+import type { ReactNode } from 'react';
 import { supabase } from '../lib/supabase';
 import { useNavigate } from 'react-router-dom';
-
 interface AdminLayoutProps {
   children: ReactNode;
   activeMenu?: string;
