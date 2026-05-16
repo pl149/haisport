@@ -76,12 +76,14 @@ html {
   border-radius: 3px;
 }
 
-.banner-btn:hover::after, .banner-btn.active::after {
+.banner-btn:hover::after,
+.banner-btn.active::after {
   width: 100%;
   box-shadow: 0 0 10px rgba(15, 82, 186, 0.8);
 }
 
-.banner-btn:hover, .banner-btn.active {
+.banner-btn:hover,
+.banner-btn.active {
   color: var(--accent-color);
   text-shadow: 0 0 5px rgba(15, 82, 186, 0.4);
 }
@@ -168,7 +170,7 @@ html {
   transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
   overflow-x: hidden;
   overflow-y: auto;
-  background: linear-gradient(180deg, rgba(255,255,255,0.8) 0%, rgba(245,245,245,0.9) 100%);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.8) 0%, rgba(245, 245, 245, 0.9) 100%);
   position: sticky;
   top: 80px;
   height: calc(100vh - 80px);
@@ -186,7 +188,8 @@ html {
 
 .sidebar.sidebar-bong-da.visible {
   width: max-content;
-  padding-right: 10px; /* Adding a tiny bit of padding around the menu items if needed, or rely on sidebar-content padding */
+  padding-right: 10px;
+  /* Adding a tiny bit of padding around the menu items if needed, or rely on sidebar-content padding */
 }
 
 .sidebar-bong-da .type-btn {
@@ -244,7 +247,8 @@ html {
   border: 1px solid transparent;
 }
 
-.type-btn:hover, .type-btn.active {
+.type-btn:hover,
+.type-btn.active {
   color: var(--text-main);
   background: rgba(15, 82, 186, 0.1);
   border-color: rgba(15, 82, 186, 0.3);
@@ -302,8 +306,11 @@ html {
 .image-wrapper::after {
   content: '';
   position: absolute;
-  top: 0; left: 0; right: 0; bottom: 0;
-  background: linear-gradient(180deg, transparent 70%, rgba(255,255,255,1) 100%);
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(180deg, transparent 70%, rgba(255, 255, 255, 1) 100%);
 }
 
 .image-wrapper img {
@@ -347,7 +354,7 @@ html {
   align-items: center;
   margin-top: auto;
   padding-top: 1rem;
-  border-top: 1px solid rgba(255,255,255,0.05);
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 .product-price {
@@ -414,7 +421,8 @@ html {
 }
 
 .phone-btn {
-  background-color: #25D366; /* Màu xanh lá */
+  background-color: #25D366;
+  /* Màu xanh lá */
 }
 
 /* Hiệu ứng sóng lan tỏa cho nút Điện thoại */
@@ -436,6 +444,7 @@ html {
     transform: scale(1);
     opacity: 0.8;
   }
+
   100% {
     transform: scale(1.6);
     opacity: 0;
@@ -443,7 +452,8 @@ html {
 }
 
 .fb-btn {
-  background: linear-gradient(45deg, #00B2FF 0%, #A033FF 35%, #FF5C87 70%, #FF8C68 100%); /* Màu gradient Messenger */
+  background: linear-gradient(45deg, #00B2FF 0%, #A033FF 35%, #FF5C87 70%, #FF8C68 100%);
+  /* Màu gradient Messenger */
 }
 
 /* Home Slider */
@@ -459,7 +469,10 @@ html {
 
 .home-slide {
   position: absolute;
-  top: 0; left: 0; width: 100%; height: 100%;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
   background-size: cover;
   background-position: center;
   opacity: 0;
@@ -470,7 +483,10 @@ html {
 .home-slide::after {
   content: '';
   position: absolute;
-  top: 0; left: 0; width: 100%; height: 100%;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
   background: rgba(0, 0, 0, 0.4);
 }
 
@@ -490,13 +506,13 @@ html {
   font-size: 3rem;
   margin-bottom: 1rem;
   text-transform: uppercase;
-  text-shadow: 0 2px 10px rgba(0,0,0,0.5);
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
 }
 
 .hero-subtitle {
   font-size: 1.5rem;
   margin-bottom: 2rem;
-  text-shadow: 0 2px 10px rgba(0,0,0,0.5);
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
 }
 
 .hero-btn {
@@ -579,8 +595,94 @@ html {
     transform: scale(0.9);
     opacity: 0;
   }
+
   to {
     transform: scale(1);
     opacity: 1;
+  }
+}
+
+/* =========================================
+   Responsive & Mobile Adjustments
+   ========================================= */
+
+/* Tablet & Smaller Desktop */
+@media (max-width: 1024px) {
+  .product-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+
+  /* 1. Header */
+  .header {
+    padding: 0 1rem;
+  }
+
+  .category-banners {
+    overflow-x: auto;
+    white-space: nowrap;
+    scrollbar-width: none;
+    /* Firefox */
+    -ms-overflow-style: none;
+    /* IE/Edge */
+  }
+
+  .category-banners::-webkit-scrollbar {
+    display: none;
+    /* Chrome/Safari/Webkit */
+  }
+
+  /* 2. Layout & Sidebar */
+  .main-content {
+    flex-direction: column;
+  }
+
+  .sidebar {
+    width: 100% !important;
+    position: static;
+    height: auto;
+  }
+
+  .product-section {
+    padding: 1rem;
+  }
+
+  .section-title {
+    font-size: 1.8rem;
+  }
+
+  /* 3. Product Grid */
+  .product-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+  }
+
+  .image-wrapper {
+    height: 180px;
+  }
+
+  .product-info {
+    padding: 1rem;
+  }
+
+  /* 4. Hero Banner */
+  .hero-title {
+    font-size: 2rem;
+  }
+
+  .hero-subtitle {
+    font-size: 1rem;
+  }
+
+  .home-slider-content {
+    padding: 0 1rem;
+  }
+
+  /* 5. Contact Button Overlap fix */
+  .app-container {
+    padding-bottom: 100px;
   }
 }
