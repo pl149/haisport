@@ -602,6 +602,33 @@ html {
   }
 }
 
+.modal-nav-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(0, 0, 0, 0.5);
+  color: #fff;
+  border: none;
+  padding: 16px;
+  font-size: 24px;
+  cursor: pointer;
+  border-radius: 50%;
+  z-index: 10000;
+  transition: background 0.3s;
+}
+
+.modal-nav-btn:hover {
+  background: rgba(0, 0, 0, 0.8);
+}
+
+.modal-prev-btn {
+  left: 2rem;
+}
+
+.modal-next-btn {
+  right: 2rem;
+}
+
 /* =========================================
    Responsive & Mobile Adjustments
    ========================================= */
@@ -715,5 +742,16 @@ html {
   /* 5. Contact Button Overlap fix */
   .app-container {
     padding-bottom: 100px;
+  }
+
+  /* Modal Navigation */
+  .modal-prev-btn {
+    left: 0.5rem;
+    padding: 12px;
+  }
+
+  .modal-next-btn {
+    right: 0.5rem;
+    padding: 12px;
   }
 }

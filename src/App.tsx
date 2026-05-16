@@ -15,7 +15,8 @@ import AdminDashboard from './admin/AdminDashboard';
 function ShopApp() {
   const [activeCategory, setActiveCategory] = useState<string>('Trang Chủ');
   const [activeType, setActiveType] = useState<string | null>(null);
-  const [selectedImage, setSelectedImage] = useState<string | null>(null);
+  const [selectedImages, setSelectedImages] = useState<string[] | null>(null);
+  const [currentImageIndex, setCurrentImageIndex] = useState<number>(0);
 
   const handleCategoryClick = (category: string) => {
     if (activeCategory === category) {
@@ -46,23 +47,42 @@ function ShopApp() {
       {activeCategory === 'Giới thiệu' ? (
         <AboutSection />
       ) : activeCategory === 'Trang Chủ' ? (
-        <HomeView onImageClick={setSelectedImage} />
+        <HomeView onImageClick={setSelectedImages} />
       ) : (
         <ProductList
           activeCategory={activeCategory}
           activeType={activeType}
           onTypeClick={handleTypeClick}
-          onImageClick={setSelectedImage}
+          onImageClick={setSelectedImages}
         />
       )}
 
       <ContactStickers />
 
       {/* Image Full Size Modal */}
-      {selectedImage && (
-        <div className="image-modal-overlay" onClick={() => setSelectedImage(null)}>
-          <button className="image-modal-close" onClick={() => setSelectedImage(null)}>&times;</button>
-          <img src={selectedImage} alt="Full size" className="image-modal-content" onClick={(e) => e.stopPropagation()} />
+      {selectedImages && selectedImages.length > 0 && (
+        <div className="image-modal-overlay" onClick={() => { setSelectedImages(null); setCurrentImageIndex(0); }}>
+          <button className="image-modal-close" onClick={() => { setSelectedImages(null); setCurrentImageIndex(0); }}>&times;</button>
+          
+          {selectedImages.length > 1 && (
+            <button 
+              className="modal-nav-btn modal-prev-btn" 
+              onClick={(e) => { e.stopPropagation(); setCurrentImageIndex(prev => (prev - 1 + selectedImages.length) % selectedImages.length); }}
+            >
+              &#10094;
+            </button>
+          )}
+
+          <img src={selectedImages[currentImageIndex]} alt="Full size" className="image-modal-content" onClick={(e) => e.stopPropagation()} />
+
+          {selectedImages.length > 1 && (
+            <button 
+              className="modal-nav-btn modal-next-btn" 
+              onClick={(e) => { e.stopPropagation(); setCurrentImageIndex(prev => (prev + 1) % selectedImages.length); }}
+            >
+              &#10095;
+            </button>
+          )}
         </div>
       )}
     </div>

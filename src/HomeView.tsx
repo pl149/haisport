@@ -8,11 +8,12 @@ interface Product {
   price: number;
   original_price: number | null;
   image_url: string;
+  images?: string[];
   main_category: string;
 }
 
 interface HomeViewProps {
-  onImageClick?: (url: string) => void;
+  onImageClick?: (urls: string[]) => void;
 }
 
 export default function HomeView({ onImageClick }: HomeViewProps) {
@@ -73,7 +74,7 @@ export default function HomeView({ onImageClick }: HomeViewProps) {
           <div className="product-grid">
             {bestSellers.map(product => (
               <div key={product.id} className="product-card glass">
-                <div className="image-wrapper" onClick={() => onImageClick && onImageClick(product.image_url || 'https://via.placeholder.com/500')}>
+                <div className="image-wrapper" onClick={() => onImageClick && onImageClick(product.images && product.images.length > 0 ? product.images : [product.image_url || 'https://via.placeholder.com/500'])}>
                   <img src={product.image_url || 'https://via.placeholder.com/500'} alt={product.name} />
                 </div>
                 <div className="product-info">
@@ -101,7 +102,7 @@ export default function HomeView({ onImageClick }: HomeViewProps) {
           <div className="product-grid">
             {promoProducts.map(product => (
               <div key={product.id} className="product-card glass">
-                <div className="image-wrapper" onClick={() => onImageClick && onImageClick(product.image_url || 'https://via.placeholder.com/500')}>
+                <div className="image-wrapper" onClick={() => onImageClick && onImageClick(product.images && product.images.length > 0 ? product.images : [product.image_url || 'https://via.placeholder.com/500'])}>
                   <img src={product.image_url || 'https://via.placeholder.com/500'} alt={product.name} />
                 </div>
                 <div className="product-info">
