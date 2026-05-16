@@ -621,18 +621,35 @@ html {
     padding: 0 1rem;
   }
 
+  .logo {
+    flex-shrink: 0;
+    text-align: center;
+    line-height: 1.1;
+    font-size: 1.6rem;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+  }
+
   .category-banners {
     overflow-x: auto;
     white-space: nowrap;
-    scrollbar-width: none;
-    /* Firefox */
-    -ms-overflow-style: none;
-    /* IE/Edge */
+    padding-bottom: 8px;
+    gap: 0.8rem;
   }
 
   .category-banners::-webkit-scrollbar {
-    display: none;
-    /* Chrome/Safari/Webkit */
+    height: 4px;
+  }
+
+  .category-banners::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 4px;
+  }
+
+  .category-banners::-webkit-scrollbar-thumb {
+    background: var(--accent-color);
+    border-radius: 4px;
   }
 
   /* 2. Layout & Sidebar */
@@ -666,6 +683,20 @@ html {
 
   .product-info {
     padding: 1rem;
+  }
+
+  .price-row {
+    flex-wrap: wrap;
+    gap: 4px;
+  }
+
+  .product-price {
+    font-size: 1.1rem;
+  }
+
+  .old-price {
+    font-size: 0.85rem;
+    margin-left: 0;
   }
 
   /* 4. Hero Banner */

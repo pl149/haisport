@@ -8,7 +8,7 @@ export default function Header({ activeCategory, onCategoryClick }: HeaderProps)
   return (
     <header className="header glass">
       <div className="logo">
-        <span className="brand-text">Hải Sport</span>
+        <span className="brand-text">HẢI<br/>SPORT</span>
       </div>
       <div className="category-banners">
         {['Trang Chủ', 'Giới thiệu', 'Bóng đá', 'Cầu lông', 'Bóng chuyền', 'Pickleball', 'Khác'].map(cat => (

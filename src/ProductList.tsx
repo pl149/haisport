@@ -9,6 +9,7 @@ interface ProductListProps {
 }
 
 export default function ProductList({ activeCategory, activeType, onTypeClick, onImageClick }: ProductListProps) {
+  const [expandedSection, setExpandedSection] = useState<string | null>(null);
   const [isQuanAoOpen, setIsQuanAoOpen] = useState(false);
   const [products, setProducts] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -22,7 +23,7 @@ export default function ProductList({ activeCategory, activeType, onTypeClick, o
           .from('products')
           .select('*')
           .order('id', { ascending: false });
-          
+
         if (error) throw error;
         if (data) setProducts(data);
       } catch (err) {
@@ -43,7 +44,7 @@ export default function ProductList({ activeCategory, activeType, onTypeClick, o
     // Chuyển đổi về chữ thường để so sánh chính xác do khác biệt viết hoa (Bóng đá vs Bóng Đá)
     const matchCategory = p.main_category?.toLowerCase() === activeCategory?.toLowerCase();
     const matchType = p.sub_category?.toLowerCase() === activeType?.toLowerCase();
-    
+
     if (activeCategory && activeType) {
       return matchCategory && matchType;
     }
@@ -58,199 +59,213 @@ export default function ProductList({ activeCategory, activeType, onTypeClick, o
       {/* Sidebar Trái */}
       <aside className={`sidebar sidebar-left ${activeCategory ? 'visible' : ''} ${activeCategory === 'Bóng đá' ? 'sidebar-bong-da' : ''}`}>
         <div className="sidebar-content glass">
-          <h3>Trang phục</h3>
-          <ul className="type-menu">
-            <li>
-              <button 
-                className={`type-btn ${activeType === 'Quần áo' ? 'active' : ''}`}
-                onClick={() => {
-                  onTypeClick('Quần áo');
-                  setIsQuanAoOpen(!isQuanAoOpen);
-                }}
-              >
-                <span className="icon">👕</span> Quần áo
-              </button>
-              {activeCategory === 'Bóng đá' && isQuanAoOpen && (
-                <ul className="type-menu">
-                  <li className="sub-menu-item">
-                    <button 
-                      className={`type-btn ${activeType === 'CLB' ? 'active' : ''}`}
-                      onClick={() => onTypeClick('CLB')}
-                    >
-                      <span className="icon">🛡️</span> CLB
-                    </button>
-                  </li>
-                  <li className="sub-menu-item">
-                    <button 
-                      className={`type-btn ${activeType === 'Thiết Kế' ? 'active' : ''}`}
-                      onClick={() => onTypeClick('Thiết Kế')}
-                    >
-                      <span className="icon">✨</span> Thiết Kế
-                    </button>
-                  </li>
-                </ul>
-              )}
-            </li>
-          </ul>
+          <h3
+            onClick={() => setExpandedSection(prev => prev === 'Trang Phục' ? null : 'Trang Phục')}
+            style={{ cursor: 'pointer', display: 'flex', justifyContent: 'space-between', alignItems: 'center', userSelect: 'none' }}
+          >
+            Trang phục <span style={{ fontSize: '0.8rem' }}>{expandedSection === 'Trang Phục' ? '▲' : '▼'}</span>
+          </h3>
+          {expandedSection === 'Trang Phục' && (
+            <ul className="type-menu">
+              <li>
+                <button
+                  className={`type-btn ${activeType === 'Quần áo' ? 'active' : ''}`}
+                  onClick={() => {
+                    onTypeClick('Quần áo');
+                    setIsQuanAoOpen(!isQuanAoOpen);
+                  }}
+                >
+                  <span className="icon">👕</span> Quần áo
+                </button>
+                {activeCategory === 'Bóng đá' && isQuanAoOpen && (
+                  <ul className="type-menu">
+                    <li className="sub-menu-item">
+                      <button
+                        className={`type-btn ${activeType === 'CLB' ? 'active' : ''}`}
+                        onClick={() => onTypeClick('CLB')}
+                      >
+                        <span className="icon">🛡️</span> CLB
+                      </button>
+                    </li>
+                    <li className="sub-menu-item">
+                      <button
+                        className={`type-btn ${activeType === 'Thiết Kế' ? 'active' : ''}`}
+                        onClick={() => onTypeClick('Thiết Kế')}
+                      >
+                        <span className="icon">✨</span> Thiết Kế
+                      </button>
+                    </li>
+                  </ul>
+                )}
+              </li>
+            </ul>
+          )}
 
-          <h3 style={{ marginTop: '2rem' }}>Thiết bị</h3>
-          <ul className="type-menu">
-            {activeCategory === 'Bóng đá' ? (
-              <>
-                <li className="sub-menu-item">
-                  <button 
-                    className={`type-btn ${activeType === 'Giày đá bóng' ? 'active' : ''}`}
-                    onClick={() => onTypeClick('Giày đá bóng')}
-                  >
-                    <span className="icon">👟</span> Giày đá bóng
-                  </button>
-                </li>
-                <li className="sub-menu-item">
-                  <button 
-                    className={`type-btn ${activeType === 'Quả Bóng' ? 'active' : ''}`}
-                    onClick={() => onTypeClick('Quả Bóng')}
-                  >
-                    <span className="icon">⚽</span> Quả Bóng
-                  </button>
-                </li>
-                <li className="sub-menu-item">
-                  <button 
-                    className={`type-btn ${activeType === 'Phụ kiện' ? 'active' : ''}`}
-                    onClick={() => onTypeClick('Phụ kiện')}
-                  >
-                    <span className="icon">🛡️</span> Phụ kiện
-                  </button>
-                </li>
-              </>
-            ) : activeCategory === 'Cầu lông' ? (
-              <>
-                <li className="sub-menu-item">
-                  <button 
-                    className={`type-btn ${activeType === 'Giày' ? 'active' : ''}`}
-                    onClick={() => onTypeClick('Giày')}
-                  >
-                    <span className="icon">👟</span> Giày
-                  </button>
-                </li>
-                <li className="sub-menu-item">
-                  <button 
-                    className={`type-btn ${activeType === 'Vợt' ? 'active' : ''}`}
-                    onClick={() => onTypeClick('Vợt')}
-                  >
-                    <span className="icon">🏸</span> Vợt
-                  </button>
-                </li>
-                <li className="sub-menu-item">
-                  <button 
-                    className={`type-btn ${activeType === 'Phụ kiện' ? 'active' : ''}`}
-                    onClick={() => onTypeClick('Phụ kiện')}
-                  >
-                    <span className="icon">🛡️</span> Phụ kiện
-                  </button>
-                </li>
-              </>
-            ) : activeCategory === 'Pickleball' ? (
-              <>
-                <li className="sub-menu-item">
-                  <button 
-                    className={`type-btn ${activeType === 'Giày' ? 'active' : ''}`}
-                    onClick={() => onTypeClick('Giày')}
-                  >
-                    <span className="icon">👟</span> Giày
-                  </button>
-                </li>
-                <li className="sub-menu-item">
-                  <button 
-                    className={`type-btn ${activeType === 'Vợt' ? 'active' : ''}`}
-                    onClick={() => onTypeClick('Vợt')}
-                  >
-                    <span className="icon">🏓</span> Vợt
-                  </button>
-                </li>
-                <li className="sub-menu-item">
-                  <button 
-                    className={`type-btn ${activeType === 'Phụ kiện' ? 'active' : ''}`}
-                    onClick={() => onTypeClick('Phụ kiện')}
-                  >
-                    <span className="icon">🛡️</span> Phụ kiện
-                  </button>
-                </li>
-              </>
-            ) : activeCategory === 'Bóng chuyền' ? (
-              <>
-                <li className="sub-menu-item">
-                  <button 
-                    className={`type-btn ${activeType === 'Giày' ? 'active' : ''}`}
-                    onClick={() => onTypeClick('Giày')}
-                  >
-                    <span className="icon">👟</span> Giày
-                  </button>
-                </li>
-                <li className="sub-menu-item">
-                  <button 
-                    className={`type-btn ${activeType === 'Dụng cụ' ? 'active' : ''}`}
-                    onClick={() => onTypeClick('Dụng cụ')}
-                  >
-                    <span className="icon">🏐</span> Dụng cụ
-                  </button>
-                </li>
-                <li className="sub-menu-item">
-                  <button 
-                    className={`type-btn ${activeType === 'Phụ kiện' ? 'active' : ''}`}
-                    onClick={() => onTypeClick('Phụ kiện')}
-                  >
-                    <span className="icon">🛡️</span> Phụ kiện
-                  </button>
-                </li>
-              </>
-            ) : activeCategory === 'Khác' ? (
-              <>
-                <li className="sub-menu-item">
-                  <button 
-                    className={`type-btn ${activeType === 'Giày' ? 'active' : ''}`}
-                    onClick={() => onTypeClick('Giày')}
-                  >
-                    <span className="icon">👟</span> Giày
-                  </button>
-                </li>
-                <li className="sub-menu-item">
-                  <button 
-                    className={`type-btn ${activeType === 'Dụng cụ' ? 'active' : ''}`}
-                    onClick={() => onTypeClick('Dụng cụ')}
-                  >
-                    <span className="icon">⚽</span> Dụng cụ
-                  </button>
-                </li>
-                <li className="sub-menu-item">
-                  <button 
-                    className={`type-btn ${activeType === 'Phụ kiện' ? 'active' : ''}`}
-                    onClick={() => onTypeClick('Phụ kiện')}
-                  >
-                    <span className="icon">🛡️</span> Phụ kiện
-                  </button>
-                </li>
-              </>
-            ) : (
-              <>
-                <li className="sub-menu-item">
-                  <button 
-                    className={`type-btn ${activeType === 'Giày' ? 'active' : ''}`}
-                    onClick={() => onTypeClick('Giày')}
-                  >
-                    <span className="icon">👟</span> Giày
-                  </button>
-                </li>
-                <li className="sub-menu-item">
-                  <button 
-                    className={`type-btn ${activeType === 'Dụng cụ' ? 'active' : ''}`}
-                    onClick={() => onTypeClick('Dụng cụ')}
-                  >
-                    <span className="icon">⚽</span> Dụng cụ
-                  </button>
-                </li>
-              </>
-            )}
-          </ul>
+          <h3
+            onClick={() => setExpandedSection(prev => prev === 'Thiết Bị' ? null : 'Thiết Bị')}
+            style={{ marginTop: '2rem', cursor: 'pointer', display: 'flex', justifyContent: 'space-between', alignItems: 'center', userSelect: 'none' }}
+          >
+            Thiết bị <span style={{ fontSize: '0.8rem' }}>{expandedSection === 'Thiết Bị' ? '▲' : '▼'}</span>
+          </h3>
+          {expandedSection === 'Thiết Bị' && (
+            <ul className="type-menu">
+              {activeCategory === 'Bóng đá' ? (
+                <>
+                  <li className="sub-menu-item">
+                    <button
+                      className={`type-btn ${activeType === 'Giày đá bóng' ? 'active' : ''}`}
+                      onClick={() => onTypeClick('Giày đá bóng')}
+                    >
+                      <span className="icon">👟</span> Giày đá bóng
+                    </button>
+                  </li>
+                  <li className="sub-menu-item">
+                    <button
+                      className={`type-btn ${activeType === 'Quả Bóng' ? 'active' : ''}`}
+                      onClick={() => onTypeClick('Quả Bóng')}
+                    >
+                      <span className="icon">⚽</span> Quả Bóng
+                    </button>
+                  </li>
+                  <li className="sub-menu-item">
+                    <button
+                      className={`type-btn ${activeType === 'Phụ kiện' ? 'active' : ''}`}
+                      onClick={() => onTypeClick('Phụ kiện')}
+                    >
+                      <span className="icon">🛡️</span> Phụ kiện
+                    </button>
+                  </li>
+                </>
+              ) : activeCategory === 'Cầu lông' ? (
+                <>
+                  <li className="sub-menu-item">
+                    <button
+                      className={`type-btn ${activeType === 'Giày' ? 'active' : ''}`}
+                      onClick={() => onTypeClick('Giày')}
+                    >
+                      <span className="icon">👟</span> Giày
+                    </button>
+                  </li>
+                  <li className="sub-menu-item">
+                    <button
+                      className={`type-btn ${activeType === 'Vợt' ? 'active' : ''}`}
+                      onClick={() => onTypeClick('Vợt')}
+                    >
+                      <span className="icon">🏸</span> Vợt
+                    </button>
+                  </li>
+                  <li className="sub-menu-item">
+                    <button
+                      className={`type-btn ${activeType === 'Phụ kiện' ? 'active' : ''}`}
+                      onClick={() => onTypeClick('Phụ kiện')}
+                    >
+                      <span className="icon">🛡️</span> Phụ kiện
+                    </button>
+                  </li>
+                </>
+              ) : activeCategory === 'Pickleball' ? (
+                <>
+                  <li className="sub-menu-item">
+                    <button
+                      className={`type-btn ${activeType === 'Giày' ? 'active' : ''}`}
+                      onClick={() => onTypeClick('Giày')}
+                    >
+                      <span className="icon">👟</span> Giày
+                    </button>
+                  </li>
+                  <li className="sub-menu-item">
+                    <button
+                      className={`type-btn ${activeType === 'Vợt' ? 'active' : ''}`}
+                      onClick={() => onTypeClick('Vợt')}
+                    >
+                      <span className="icon">🏓</span> Vợt
+                    </button>
+                  </li>
+                  <li className="sub-menu-item">
+                    <button
+                      className={`type-btn ${activeType === 'Phụ kiện' ? 'active' : ''}`}
+                      onClick={() => onTypeClick('Phụ kiện')}
+                    >
+                      <span className="icon">🛡️</span> Phụ kiện
+                    </button>
+                  </li>
+                </>
+              ) : activeCategory === 'Bóng chuyền' ? (
+                <>
+                  <li className="sub-menu-item">
+                    <button
+                      className={`type-btn ${activeType === 'Giày' ? 'active' : ''}`}
+                      onClick={() => onTypeClick('Giày')}
+                    >
+                      <span className="icon">👟</span> Giày
+                    </button>
+                  </li>
+                  <li className="sub-menu-item">
+                    <button
+                      className={`type-btn ${activeType === 'Dụng cụ' ? 'active' : ''}`}
+                      onClick={() => onTypeClick('Dụng cụ')}
+                    >
+                      <span className="icon">🏐</span> Dụng cụ
+                    </button>
+                  </li>
+                  <li className="sub-menu-item">
+                    <button
+                      className={`type-btn ${activeType === 'Phụ kiện' ? 'active' : ''}`}
+                      onClick={() => onTypeClick('Phụ kiện')}
+                    >
+                      <span className="icon">🛡️</span> Phụ kiện
+                    </button>
+                  </li>
+                </>
+              ) : activeCategory === 'Khác' ? (
+                <>
+                  <li className="sub-menu-item">
+                    <button
+                      className={`type-btn ${activeType === 'Giày' ? 'active' : ''}`}
+                      onClick={() => onTypeClick('Giày')}
+                    >
+                      <span className="icon">👟</span> Giày
+                    </button>
+                  </li>
+                  <li className="sub-menu-item">
+                    <button
+                      className={`type-btn ${activeType === 'Dụng cụ' ? 'active' : ''}`}
+                      onClick={() => onTypeClick('Dụng cụ')}
+                    >
+                      <span className="icon">⚽</span> Dụng cụ
+                    </button>
+                  </li>
+                  <li className="sub-menu-item">
+                    <button
+                      className={`type-btn ${activeType === 'Phụ kiện' ? 'active' : ''}`}
+                      onClick={() => onTypeClick('Phụ kiện')}
+                    >
+                      <span className="icon">🛡️</span> Phụ kiện
+                    </button>
+                  </li>
+                </>
+              ) : (
+                <>
+                  <li className="sub-menu-item">
+                    <button
+                      className={`type-btn ${activeType === 'Giày' ? 'active' : ''}`}
+                      onClick={() => onTypeClick('Giày')}
+                    >
+                      <span className="icon">👟</span> Giày
+                    </button>
+                  </li>
+                  <li className="sub-menu-item">
+                    <button
+                      className={`type-btn ${activeType === 'Dụng cụ' ? 'active' : ''}`}
+                      onClick={() => onTypeClick('Dụng cụ')}
+                    >
+                      <span className="icon">⚽</span> Dụng cụ
+                    </button>
+                  </li>
+                </>
+              )}
+            </ul>
+          )}
         </div>
       </aside>
 
@@ -258,12 +273,12 @@ export default function ProductList({ activeCategory, activeType, onTypeClick, o
       <main className={`product-section ${activeCategory ? 'with-sidebar' : ''}`}>
         <div className="section-header">
           <h2 className="section-title">
-            {activeCategory 
-              ? `${activeCategory} ${activeType ? `/ ${activeType}` : ''}` 
+            {activeCategory
+              ? `${activeCategory} ${activeType ? `/ ${activeType}` : ''}`
               : 'SẢN PHẨM NỔI BẬT'}
           </h2>
         </div>
-        
+
         <div className="product-grid">
           {loading ? (
             <div className="empty-state text-gray-500 animate-pulse">Đang tải sản phẩm...</div>
