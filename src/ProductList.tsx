@@ -5,7 +5,7 @@ interface ProductListProps {
   activeCategory: string;
   activeType: string | null;
   onTypeClick: (type: string) => void;
-  onImageClick?: (url: string) => void;
+  onImageClick?: (urls: string[]) => void;
 }
 
 export default function ProductList({ activeCategory, activeType, onTypeClick, onImageClick }: ProductListProps) {
