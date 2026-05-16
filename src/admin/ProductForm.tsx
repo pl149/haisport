@@ -8,6 +8,7 @@ export interface Product {
   price: number;
   original_price?: number | null;
   image_url: string;
+  images?: string[];
   main_category: string;
   sub_category: string;
   is_best_seller?: boolean;
@@ -38,8 +39,8 @@ export default function ProductForm({ initialData, onClose, onSuccess }: Product
     sub_category: SUB_CATEGORIES[MAIN_CATEGORIES[0]][0],
     is_best_seller: false,
   });
-  const [imageFile, setImageFile] = useState<File | null>(null);
-  const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [imageFiles, setImageFiles] = useState<File[]>([]);
+  const [imagePreviews, setImagePreviews] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -50,8 +51,10 @@ export default function ProductForm({ initialData, onClose, onSuccess }: Product
         price: initialData.price ? initialData.price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".") : '',
         original_price: initialData.original_price ? initialData.original_price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".") : ''
       });
-      if (initialData.image_url) {
-        setImagePreview(initialData.image_url);
+      if (initialData.images && initialData.images.length > 0) {
+        setImagePreviews(initialData.images);
+      } else if (initialData.image_url) {
+        setImagePreviews([initialData.image_url]);
       }
     }
   }, [initialData]);
@@ -59,11 +62,13 @@ export default function ProductForm({ initialData, onClose, onSuccess }: Product
   // Clean up object URL when component unmounts or preview changes
   useEffect(() => {
     return () => {
-      if (imagePreview && imagePreview.startsWith('blob:')) {
-        URL.revokeObjectURL(imagePreview);
-      }
+      imagePreviews.forEach(preview => {
+        if (preview && preview.startsWith('blob:')) {
+          URL.revokeObjectURL(preview);
+        }
+      });
     };
-  }, [imagePreview]);
+  }, [imagePreviews]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const target = e.target as HTMLInputElement;
@@ -95,11 +100,13 @@ export default function ProductForm({ initialData, onClose, onSuccess }: Product
   };
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      setImageFile(file);
-      const previewUrl = URL.createObjectURL(file);
-      setImagePreview(previewUrl);
+    const files = e.target.files;
+    if (files && files.length > 0) {
+      const fileArray = Array.from(files);
+      setImageFiles(fileArray);
+      
+      const previewUrls = fileArray.map(file => URL.createObjectURL(file));
+      setImagePreviews(previewUrls);
     }
   };
 
@@ -110,25 +117,32 @@ export default function ProductForm({ initialData, onClose, onSuccess }: Product
 
     try {
       let finalImageUrl = formData.image_url;
+      let finalImages = formData.images || [];
 
-      if (imageFile) {
-        const fileExt = imageFile.name.split('.').pop();
-        const fileName = `${Date.now()}_${Math.random().toString(36).substring(2, 9)}.${fileExt}`;
-        const filePath = `${fileName}`;
+      if (imageFiles && imageFiles.length > 0) {
+        const uploadPromises = imageFiles.map(async (file) => {
+          const fileExt = file.name.split('.').pop();
+          const fileName = `${Date.now()}_${Math.random().toString(36).substring(2, 9)}.${fileExt}`;
+          const filePath = `${fileName}`;
 
-        const { error: uploadError } = await supabase.storage
-          .from('product-images')
-          .upload(filePath, imageFile);
+          const { error: uploadError } = await supabase.storage
+            .from('product-images')
+            .upload(filePath, file);
 
-        if (uploadError) {
-          throw new Error(`Lỗi tải ảnh: ${uploadError.message}`);
-        }
+          if (uploadError) {
+            throw new Error(`Lỗi tải ảnh: ${uploadError.message}`);
+          }
 
-        const { data: { publicUrl } } = supabase.storage
-          .from('product-images')
-          .getPublicUrl(filePath);
+          const { data: { publicUrl } } = supabase.storage
+            .from('product-images')
+            .getPublicUrl(filePath);
 
-        finalImageUrl = publicUrl;
+          return publicUrl;
+        });
+
+        const uploadedUrls = await Promise.all(uploadPromises);
+        finalImages = uploadedUrls;
+        finalImageUrl = uploadedUrls[0];
       }
 
       const numericPrice = Number(String(formData.price).replace(/\./g, ''));
@@ -143,6 +157,7 @@ export default function ProductForm({ initialData, onClose, onSuccess }: Product
             price: numericPrice,
             original_price: numericOriginalPrice,
             image_url: finalImageUrl,
+            images: finalImages,
             main_category: formData.main_category,
             sub_category: formData.sub_category,
             is_best_seller: formData.is_best_seller,
@@ -160,6 +175,7 @@ export default function ProductForm({ initialData, onClose, onSuccess }: Product
               price: numericPrice,
               original_price: numericOriginalPrice,
               image_url: finalImageUrl,
+              images: finalImages,
               main_category: formData.main_category,
               sub_category: formData.sub_category,
               is_best_seller: formData.is_best_seller,
@@ -257,14 +273,19 @@ export default function ProductForm({ initialData, onClose, onSuccess }: Product
                 id="image_url"
                 name="image_url"
                 type="file"
+                multiple
                 accept="image/*"
                 onChange={handleImageChange}
                 className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900 transition-shadow outline-none file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
               />
-              {imagePreview && (
+              {imagePreviews && imagePreviews.length > 0 && (
                 <div className="mt-3">
                   <p className="text-xs text-gray-500 mb-1">Ảnh xem trước:</p>
-                  <img src={imagePreview} alt="Preview" className="h-32 w-32 object-cover rounded-md border border-gray-200" />
+                  <div className="flex gap-2 flex-wrap">
+                    {imagePreviews.map((preview, index) => (
+                      <img key={index} src={preview} alt={`Preview ${index}`} className="h-32 w-32 object-cover rounded-md border border-gray-200" />
+                    ))}
+                  </div>
                 </div>
               )}
             </div>
