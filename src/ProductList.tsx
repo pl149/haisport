@@ -284,7 +284,7 @@ export default function ProductList({ activeCategory, activeType, onTypeClick, o
             <div className="empty-state text-gray-500 animate-pulse">Đang tải sản phẩm...</div>
           ) : filteredProducts.length > 0 ? filteredProducts.map(product => (
             <div key={product.id} className="product-card glass">
-              <div className="image-wrapper" onClick={() => onImageClick && onImageClick(product.image_url || 'https://via.placeholder.com/500')}>
+              <div className="image-wrapper" onClick={() => onImageClick && onImageClick(product.images && product.images.length > 0 ? product.images : [product.image_url || 'https://via.placeholder.com/500'])}>
                 <img src={product.image_url || 'https://via.placeholder.com/500'} alt={product.name} />
               </div>
               <div className="product-info">
