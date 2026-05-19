@@ -14,8 +14,7 @@ export const aboutData = {
   achievements: [
     'Phục vụ hơn 50,000+ khách hàng trên toàn quốc.',
     'Nhà tài trợ chính cho 20+ giải đấu thể thao cộng đồng.',
-    'Đối tác uy tín của các thương hiệu hàng đầu: Nike, Adidas, Yonex...',
-    'Đạt danh hiệu "Cửa hàng xuất sắc" năm 2023.'
+    'Đối tác uy tín của các thương hiệu hàng đầu: Động Lực SPORT, Wika, Zoner, Yonex...',
   ],
   defaultSlideshow: [
     'https://images.unsplash.com/photo-1526676037777-05a232554f77?w=1200&q=80',
@@ -36,9 +35,10 @@ export default function AboutSection() {
   useEffect(() => {
     const fetchAboutData = async () => {
       try {
-        const { data, error } = await supabase.from('site_settings').select('*');
+        const { data, error } = await supabase.from('site_settings').select('*').order('id', { ascending: false });
         if (error) throw error;
 
+        console.log("Fetched About Data:", data);
         if (data) {
           const slider = data
             .filter(s => s.section_key === 'about_slider' && s.image_url)
@@ -74,6 +74,10 @@ export default function AboutSection() {
     // Clear interval khi component unmount để tối ưu hiệu năng (cleanup)
     return () => clearInterval(timer);
   }, [activeSliderImages.length]);
+
+  if (loading) {
+    return <div className="text-center py-10">Đang tải dữ liệu...</div>;
+  }
 
   return (
     <section className="about-section glass">

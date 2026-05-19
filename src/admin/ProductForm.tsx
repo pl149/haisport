@@ -22,11 +22,11 @@ interface ProductFormProps {
 
 const MAIN_CATEGORIES = ['Bóng Đá', 'Cầu Lông', 'Bóng Chuyền', 'Pickleball', 'Khác'];
 const SUB_CATEGORIES: Record<string, string[]> = {
-  'Bóng Đá': ['Giày', 'Quả bóng', 'Phụ kiện', 'Khác'],
-  'Cầu Lông': ['Giày', 'Vợt', 'Phụ kiện', 'Khác'],
-  'Bóng Chuyền': ['Giày', 'Quả bóng', 'Phụ kiện', 'Khác'],
-  'Pickleball': ['Giày', 'Vợt', 'Phụ kiện', 'Khác'],
-  'Khác': ['Giày', 'Dụng cụ', 'Phụ kiện', 'Khác']
+  'Bóng Đá': ['Giày', 'Quần áo', 'Quả bóng', 'Phụ kiện', 'Khác'],
+  'Cầu Lông': ['Giày', 'Quần áo', 'Vợt', 'Phụ kiện', 'Khác'],
+  'Bóng Chuyền': ['Giày', 'Quần áo', 'Quả bóng', 'Phụ kiện', 'Khác'],
+  'Pickleball': ['Giày', 'Quần áo', 'Vợt', 'Phụ kiện', 'Khác'],
+  'Khác': ['Giày', 'Quần áo', 'Dụng cụ', 'Phụ kiện', 'Khác']
 };
 
 export default function ProductForm({ initialData, onClose, onSuccess }: ProductFormProps) {

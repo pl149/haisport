@@ -113,18 +113,18 @@ export default function ProductList({ activeCategory, activeType, onTypeClick, o
                 <>
                   <li className="sub-menu-item">
                     <button
-                      className={`type-btn ${activeType === 'Giày đá bóng' ? 'active' : ''}`}
-                      onClick={() => onTypeClick('Giày đá bóng')}
+                      className={`type-btn ${activeType === 'Giày' ? 'active' : ''}`}
+                      onClick={() => onTypeClick('Giày')}
                     >
-                      <span className="icon">👟</span> Giày đá bóng
+                      <span className="icon">👟</span> Giày
                     </button>
                   </li>
                   <li className="sub-menu-item">
                     <button
-                      className={`type-btn ${activeType === 'Quả Bóng' ? 'active' : ''}`}
-                      onClick={() => onTypeClick('Quả Bóng')}
+                      className={`type-btn ${activeType === 'Quả bóng' ? 'active' : ''}`}
+                      onClick={() => onTypeClick('Quả bóng')}
                     >
-                      <span className="icon">⚽</span> Quả Bóng
+                      <span className="icon">⚽</span> Quả bóng
                     </button>
                   </li>
                   <li className="sub-menu-item">
@@ -202,10 +202,10 @@ export default function ProductList({ activeCategory, activeType, onTypeClick, o
                   </li>
                   <li className="sub-menu-item">
                     <button
-                      className={`type-btn ${activeType === 'Dụng cụ' ? 'active' : ''}`}
-                      onClick={() => onTypeClick('Dụng cụ')}
+                      className={`type-btn ${activeType === 'Quả bóng' ? 'active' : ''}`}
+                      onClick={() => onTypeClick('Quả bóng')}
                     >
-                      <span className="icon">🏐</span> Dụng cụ
+                      <span className="icon">🏐</span> Quả bóng
                     </button>
                   </li>
                   <li className="sub-menu-item">
