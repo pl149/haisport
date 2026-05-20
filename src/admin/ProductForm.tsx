@@ -22,7 +22,7 @@ interface ProductFormProps {
 
 const MAIN_CATEGORIES = ['Bóng Đá', 'Cầu Lông', 'Bóng Chuyền', 'Pickleball', 'Khác'];
 const SUB_CATEGORIES: Record<string, string[]> = {
-  'Bóng Đá': ['Giày', 'Quần áo', 'Quả bóng', 'Phụ kiện', 'Khác'],
+  'Bóng Đá': ['Giày', 'Quần áo', 'Trẻ em', 'Quả bóng', 'Phụ kiện', 'Khác'],
   'Cầu Lông': ['Giày', 'Quần áo', 'Vợt', 'Phụ kiện', 'Khác'],
   'Bóng Chuyền': ['Giày', 'Quần áo', 'Quả bóng', 'Phụ kiện', 'Khác'],
   'Pickleball': ['Giày', 'Quần áo', 'Vợt', 'Phụ kiện', 'Khác'],
@@ -43,11 +43,23 @@ export default function ProductForm({ initialData, onClose, onSuccess }: Product
   const [imagePreviews, setImagePreviews] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [isCustomDesign, setIsCustomDesign] = useState(false);
 
   useEffect(() => {
     if (initialData) {
+      let initSubCat = initialData.sub_category;
+      let isDesign = false;
+      if (initialData.main_category === 'Bóng Đá') {
+        if (initialData.sub_category === 'CLB' || initialData.sub_category === 'Thiết Kế') {
+          initSubCat = 'Quần áo';
+          isDesign = initialData.sub_category === 'Thiết Kế';
+        }
+      }
+      setIsCustomDesign(isDesign);
+
       setFormData({
         ...initialData,
+        sub_category: initSubCat,
         price: initialData.price ? initialData.price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".") : '',
         original_price: initialData.original_price ? initialData.original_price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".") : ''
       });
@@ -56,6 +68,19 @@ export default function ProductForm({ initialData, onClose, onSuccess }: Product
       } else if (initialData.image_url) {
         setImagePreviews([initialData.image_url]);
       }
+    } else {
+      setIsCustomDesign(false);
+      setFormData({
+        name: '',
+        price: '',
+        original_price: '',
+        image_url: '',
+        main_category: MAIN_CATEGORIES[0],
+        sub_category: SUB_CATEGORIES[MAIN_CATEGORIES[0]][0],
+        is_best_seller: false,
+      });
+      setImagePreviews([]);
+      setImageFiles([]);
     }
   }, [initialData]);
 
@@ -148,6 +173,11 @@ export default function ProductForm({ initialData, onClose, onSuccess }: Product
       const numericPrice = Number(String(formData.price).replace(/\./g, ''));
       const numericOriginalPrice = formData.original_price ? Number(String(formData.original_price).replace(/\./g, '')) : null;
 
+      let finalSubCategory = formData.sub_category;
+      if (formData.main_category === 'Bóng Đá' && formData.sub_category === 'Quần áo') {
+        finalSubCategory = isCustomDesign ? 'Thiết Kế' : 'CLB';
+      }
+
       if (initialData?.id) {
         // Cập nhật sản phẩm
         const { error: updateError } = await supabase
@@ -159,7 +189,7 @@ export default function ProductForm({ initialData, onClose, onSuccess }: Product
             image_url: finalImageUrl,
             images: finalImages,
             main_category: formData.main_category,
-            sub_category: formData.sub_category,
+            sub_category: finalSubCategory,
             is_best_seller: formData.is_best_seller,
           })
           .eq('id', initialData.id);
@@ -177,7 +207,7 @@ export default function ProductForm({ initialData, onClose, onSuccess }: Product
               image_url: finalImageUrl,
               images: finalImages,
               main_category: formData.main_category,
-              sub_category: formData.sub_category,
+              sub_category: finalSubCategory,
               is_best_seller: formData.is_best_seller,
             }
           ]);
@@ -323,6 +353,20 @@ export default function ProductForm({ initialData, onClose, onSuccess }: Product
                     <option key={cat} value={cat}>{cat}</option>
                   ))}
                 </select>
+                {formData.main_category === 'Bóng Đá' && formData.sub_category === 'Quần áo' && (
+                  <div className="flex items-center mt-2">
+                    <input
+                      id="is_custom_design"
+                      type="checkbox"
+                      checked={isCustomDesign}
+                      onChange={(e) => setIsCustomDesign(e.target.checked)}
+                      className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded cursor-pointer"
+                    />
+                    <label className="ml-2 block text-xs font-semibold text-gray-600 cursor-pointer select-none" htmlFor="is_custom_design">
+                      Đây là hàng Thiết Kế (Nếu bỏ trống sẽ tự xếp vào mục CLB)
+                    </label>
+                  </div>
+                )}
               </div>
             </div>
 

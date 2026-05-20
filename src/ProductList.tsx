@@ -43,7 +43,14 @@ export default function ProductList({ activeCategory, activeType, onTypeClick, o
   const filteredProducts = products.filter(p => {
     // Chuyển đổi về chữ thường để so sánh chính xác do khác biệt viết hoa (Bóng đá vs Bóng Đá)
     const matchCategory = p.main_category?.toLowerCase() === activeCategory?.toLowerCase();
-    const matchType = p.sub_category?.toLowerCase() === activeType?.toLowerCase();
+    
+    let matchType = false;
+    if (activeCategory?.toLowerCase() === 'bóng đá' && activeType === 'Quần áo') {
+      const subCat = p.sub_category?.toLowerCase();
+      matchType = subCat === 'quần áo' || subCat === 'clb' || subCat === 'thiết kế';
+    } else {
+      matchType = p.sub_category?.toLowerCase() === activeType?.toLowerCase();
+    }
 
     if (activeCategory && activeType) {
       return matchCategory && matchType;
@@ -98,6 +105,16 @@ export default function ProductList({ activeCategory, activeType, onTypeClick, o
                   </ul>
                 )}
               </li>
+              {activeCategory === 'Bóng đá' && (
+                <li>
+                  <button
+                    className={`type-btn ${activeType === 'Trẻ em' ? 'active' : ''}`}
+                    onClick={() => onTypeClick('Trẻ em')}
+                  >
+                    <span className="icon">👦</span> Trẻ em
+                  </button>
+                </li>
+              )}
             </ul>
           )}
 
